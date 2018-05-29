@@ -6,6 +6,6 @@ source('ModelFactory.R')
 #
 
 df <- read.csv('test_data.csv')
-dir.create('RESULTS')
+
 runModelFactory(df, 'Cheq_status', 'outcome', 'DSS_DEMO', 'RESULTS', 'AUC', 'quick')
 

@@ -10,8 +10,6 @@ library(data.table)
 # resultDir - Path to write the results
 # metric - The metric to include in the results file
 # mode - (optional) autopilot or quick
-# template (optional) - TODO. Parameters you will want to use when 
-#                       generating the project and models
 # ####################################################################
 
 maxWorkers=20
@@ -23,6 +21,7 @@ runModelFactory <- function(df, keycol, target, projectNamePrefix, resultDir, me
 	if(resultDir=='') {
 		resultsFile = 'model_list.tsv'
 	} else {
+		if(!dir.exists(resultDir)) dir.create(resultDir)
 		resultsFile = paste(resultDir, 'model_list.tsv', sep='/')
 	}
 
