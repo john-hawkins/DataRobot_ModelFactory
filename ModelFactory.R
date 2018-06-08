@@ -28,7 +28,7 @@ runModelFactory <- function(df, keycol, target, projectNamePrefix, resultDir, me
 	# Test the output file before we begin 
 	result = tryCatch({
 		rez <- file(resultsFile, "w")
-		writeLines("key\tModelType\tBlueprintID\tdatarobot_project_id\tdatarobot_model_id\tmetric",con=rez,sep="\n")
+		writeLines("key\tMetric\tModelType\tBlueprintID\tdatarobot_project_id\tdatarobot_model_id",con=rez,sep="\n")
 		flush(rez)
 	}, warning = function(w) {
     		message('Potential problem with writing your results file.')
@@ -67,12 +67,15 @@ runModelFactory <- function(df, keycol, target, projectNamePrefix, resultDir, me
 		# Once Autopilot has finished we retrieve the best model ID
 		all.models 	<- ListModels(temp.proj)
 		model.frame 	<- as.data.frame(all.models)
+		# ###############################################
+		# INSERT YOUR MODEL SELECTION LOGIC HERE
+		# ###############################################
 		best.model	<- all.models[[1]]
         	model.type      <- best.model$modelType
         	model.bp        <- best.model$blueprintId
 		modelId		<- best.model$modelId
 		metric		<- best.model$metrics[[metric]]$holdout		
-		writeLines(paste(key, model.type, model.bp, temp.proj$projectId, modelId, metric, sep='\t'), con=rez, sep="\n")		
+		writeLines(paste(key, metric, model.type, model.bp, temp.proj$projectId, modelId, sep='\t'), con=rez, sep="\n")		
 		flush(rez)
 	}
 
@@ -97,7 +100,7 @@ runModelFactory <- function(df, keycol, target, projectNamePrefix, resultDir, me
         model.bp        <- best.model$blueprintId
         modelId         <- best.model$modelId
         metric          <- best.model$metrics[[metric]]$validation
-        writeLines(paste('NULL', model.type, model.bp, temp.proj$projectId, modelId, metric, sep='\t'), con=rez, sep="\n")
+        writeLines(paste('NULL', metric, model.type, model.bp, temp.proj$projectId, modelId, sep='\t'), con=rez, sep="\n")
 	flush(rez)
 
 	# CLOSE THE RESULTS FILE 

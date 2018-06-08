@@ -85,6 +85,14 @@ def key_model(key):
     else:
         return "{ key: %s, message: 'no such key'}"  % (key)
 
+def get_model(key):
+    exists = (key in models['key'].unique() )
+    if exists:
+        mod = models.loc[models['key'] ==  str(key)]
+    else:
+        mod = models.loc[models['key'] ==  'nan']
+    return mod
+
 # ###########################################################################
 # HELPER FUNTION TO UPDATE THE ROW INDEXES
 # ###########################################################################
@@ -113,7 +121,7 @@ def predict():
         # Get the subset that has that key
         subset = df.loc[df[ config['key_col'] ] == key]
         print("Subset for key [%s] has [%s] rows" % (key, len(subset)))
-        mod = models.loc[models['key'] == str(key)]
+        mod = get_model(key)
         projectid, modelid = (mod.iloc[0]['datarobot_project_id'], mod.iloc[0]['datarobot_model_id'])
         print("PROJECT: %s MODEL: %s" % (projectid, modelid) )
         s = StringIO()
@@ -150,7 +158,7 @@ def predict_single():
     # AT THIS POINT WE ASSUME IT IS A SINGLE ROW
     key = str(df.iloc[0][ config['key_col'] ])
     print("KEY: %s" % key)
-    mod = models.loc[models['key'] == key]
+    mod = get_model(key)
     print("PROJECT: %s MODEL: %s" % (mod.iloc[0]['datarobot_project_id'], mod.iloc[0]['datarobot_model_id']) )
     projectid, modelid = (mod.iloc[0]['datarobot_project_id'], mod.iloc[0]['datarobot_model_id'])
     results = score_data(projectid, modelid, thedata)
